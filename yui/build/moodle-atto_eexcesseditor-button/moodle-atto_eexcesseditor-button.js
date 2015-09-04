@@ -15,6 +15,15 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
                     }
             citOpts.push(opt);
         };
+        citOpts.push({
+            text:"Insert Link",
+            callback:that.insertLink
+          });
+        citOpts.push({
+            text:"Insert Image",
+            callback:that.insertImage,
+            
+          });
         
         this.addButton({
             icon: 'icon',
@@ -44,14 +53,57 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
         },'enter');
 
     },
+    insertLink:function(){
+        var host = this.get('host'),
+            sel = this.selectedRec;
+        
+        if(!sel.length){
+            window.console.log("Nothing is selected");
+            return false;
+        }else{
+                for(var i = 0;i<sel.length;i++){
+                var link = sel[i],
+                insLink = '<a href =""'+link.uri+'>'+link.title+'</a> ';
+                host.insertContentAtFocusPoint(insLink + '</br>');
+           }
+            
+                
+        }
+    },
+    insertImage:function(){
+        var host = this.get('host');
+        var sel = this.selectedRec;
+            
+        if(!sel.length){
+            window.console.log("Nothing is selected");
+            return false;
+        }else{
+         for(var i = 0; i<sel.length;i++){
+             var img = window.document.createElement('img'),
+                 image = sel[i];
+                img.src = image.previewImage;
+                if(img.src !== image.previewImage){
+                    var link = sel[i],
+                    insLink = '<a href =""'+link.uri+'>'+link.title+'</a> ';
+                    host.insertContentAtFocusPoint(insLink + '</br>');
+                }else{
+                    host.insertContentAtFocusPoint(img.outerHTML +'</br>');
+                    window.console.log(img);
+                }
+            }
+        }
+    },
+   
     onButtonClick:function(){
         this.requireCitations();
+        
     },
     onToolbarMenuItemClick:function(e){
         var idx = e.target.getData("index"),
             style = this.citationStyles[idx].style;
         window.console.log(style);
         this.requireCitations(style);
+        
     },
     
     requireCitations:function(style){
@@ -82,7 +134,7 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             var r = recomendations[i],
                 id = typeof r.id === 'undefined' ? "":r.id,
                 collectionName = typeof r.collectionName === 'undefined' ? "":r.collectionName,
-                uri = typeof r.url === 'undefined'?"":r.url,
+                uri = typeof r.uri === 'undefined'?"":r.uri,
                 title = typeof r.title ==='undefined'?"":r.title,
                 creator = typeof r.creator ==='undefined'?"":r.creator,
                 year = typeof r.facets.year ==='undefined'?"":r.facets.year;
@@ -96,7 +148,8 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
                     "issued":{"date-parts":[[year]]}
                 }
            citationJSONList[citObj.id] = citObj;
-       }
+           }
+           
        return citationJSONList;  
     },
     insertCitations:function(c){
