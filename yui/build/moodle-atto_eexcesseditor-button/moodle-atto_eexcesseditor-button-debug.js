@@ -3,6 +3,7 @@ YUI.add('moodle-atto_eexcesseditor-button', function (Y, NAME) {
 Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_atto.EditorPlugin, [], {
     selectedRec:[],
     citationStyles:[],
+	
     initializer: function () {
         // add buttons and tie methods to them
         var that = this;
@@ -33,7 +34,7 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
           });
           
         this.addToolbarMenu({
-            icon: 'icon',
+            icon: 'iconcitstyles',
             iconComponent:'atto_eexcesseditor',
             callback:function(){},
             items:citOpts
@@ -46,6 +47,7 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
                 that.selectedRec = [];
             }
         });
+        
         this.get('host').editor.on('key',function(){
             var txt = that.getText();
             window.console.log('Querying for text: "'+  txt+'"');
@@ -56,6 +58,7 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
     insertLink:function(){
         var host = this.get('host'),
             sel = this.selectedRec;
+        this.lastUsedCitationStyle='insertLink';    
         
         if(!sel.length){
             window.console.log("Nothing is selected");
@@ -73,7 +76,7 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
     insertImage:function(){
         var host = this.get('host');
         var sel = this.selectedRec;
-            
+        this.lastUsedCitationStyle='insertImage';    
         if(!sel.length){
             window.console.log("Nothing is selected");
             return false;
@@ -117,12 +120,26 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             var citjson = that.parseRecToCitation(that.selectedRec);
             var cit = null;
             window.console.log("selected records")
-            window.console.log(citjson);
+            //window.console.log(citjson);
+			//window.console.log("style: "+style);
+			//window.console.log("lastUsedCitationStyle: "+that.lastUsedCitationStyle);
+			if(typeof style === 'undefined'){
+				style=that.lastUsedCitationStyle;
+				if(style=='insertImage'){
+					that.insertImage();
+					return;
+				}
+				if(style=='insertLink'){
+					that.insertLink();
+					return;
+				}
+			}
             if(typeof style === 'undefined'){
                 //window.console.log("running with generic");
                 cit = CitationProcessor(citjson);    
             }else{
                 //window.console.log("running with specific style");
+				that.lastUsedCitationStyle=style;
                 cit = CitationProcessor(citjson,undefined,style);
             }
             that.insertCitations(cit);
