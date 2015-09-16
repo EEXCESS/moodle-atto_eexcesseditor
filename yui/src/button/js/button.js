@@ -11,17 +11,16 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             var opt = {
                         text:that.citationStyles[i].name,
                         callback:that.onToolbarMenuItemClick
-                    }
+                    };
             citOpts.push(opt);
-        };
+        }
         citOpts.push({
             text:"Insert Link",
             callback:that.insertLink
           });
         citOpts.push({
             text:"Insert Image",
-            callback:that.insertImage,
-            
+            callback:that.insertImage
           });
         
         this.addButton({
@@ -40,10 +39,27 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
         window.addEventListener('message',function(e){
             if(e.data.event=='eexcess.selectionChanged'){
                 that.selectedRec = [];
-                that.selectedRec = e.data.selected;   
+                that.selectedRec = e.data.selected;
             }else if(e.data.event=="eexcess.queryTriggered"){
                 that.selectedRec = [];
-            }
+            }else if(e.data.event=='eexcess.linkItemClicked'){
+				//alert(e.data.data);
+				window.console.log("atto plugin received clicked link: "+e.data.data.id);
+				// trying to hide dashboard
+				
+				that.selectedRec=[e.data.data];
+				that.requireCitations();
+			}else if(e.data.event=='eexcess.linkImageClicked'){
+				//alert(e.data.data);
+				window.console.log("atto plugin received image: "+e.data.data.id);
+				that.selectedRec=[e.data.data];
+				that.insertImage();
+			} else if(e.data.event == 'eexcess.screenshot'){
+				window.console.log("atto plugin received screenshot: "+e.data.data);
+				that.insertScreenshot(e.data.data);
+				
+				//$('#screenshot-img').attr('src', e.data.data);
+			}
         });
         
         this.get('host').editor.on('key',function(){
@@ -53,28 +69,71 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
         },'enter');
 
     },
+	hideDashboard:function(){
+		/* // just the iframe alone does not help, has to be the eexcess_container
+		var iframes = document.getElementsByTagName('iframe');
+		window.console.log("trying to find dashbord for hiding");
+		for (var i = 0; i < iframes.length; i++) {
+			window.console.log("iframe: "+iframes[i].id)
+			if(iframes[i].id=="moodleEEXCESSdashboard"){
+				iframes[i].style.visibility="hidden";
+				break;
+			}
+		}*/
+		var container=document.getElementById("eexcess_container");
+		container.style.visibility="hidden";
+		//button.removeClass('active'); // would be so nice in jquery - if i had it available here. 
+		document.getElementById("eexcess_button").className = "sym-eexcess";
+                
+	},
+	showDashboard:function(){
+		/*
+		var iframes = document.getElementsByTagName('iframe');
+		for (var i = 0; i < iframes.length; i++) {
+			if(iframes[i].id=="moodleEEXCESSdashboard"){
+				iframes[i].style.visibility="visible";
+				break;
+			}
+		}*/
+		var container=document.getElementById("eexcess_container");
+		container.style.visibility="visible";
+	},
+	insertCitationToEditor:function(s){
+		var host=this.get('host');
+		window.console.log('got to insert: '+s);
+		this.hideDashboard();
+		host.focus();
+		host.insertContentAtFocusPoint(s + '<br/>');
+		//this.showDashboard();
+		
+	},
+	insertScreenshot:function(imagesrc){
+		var imagetag="<img src='"+imagesrc+"'/>";
+		this.insertCitationToEditor(imagetag);
+	},
     insertLink:function(){
-        var host = this.get('host'),
-            sel = this.selectedRec;
-        this.lastUsedCitationStyle='insertLink';    
+        //var host = this.get('host');
+        var sel = this.selectedRec;
+        this.lastUsedCitationStyle='insertLink';
         
         if(!sel.length){
             window.console.log("Nothing is selected");
             return false;
         }else{
-                for(var i = 0;i<sel.length;i++){
-                var link = sel[i],
-                insLink = '<a href =""'+link.uri+'>'+link.title+'</a> ';
-                host.insertContentAtFocusPoint(insLink + '</br>');
-           }
+            for(var i = 0;i<sel.length;i++){
+				var link = sel[i],
+				insLink = '<a href =""'+link.uri+'>'+link.title+'</a> ';
+				//host.insertContentAtFocusPoint(insLink + '</br>');
+				this.insertCitationToEditor(insLink);
+			}
             
                 
         }
     },
     insertImage:function(){
-        var host = this.get('host');
+        //var host = this.get('host');
         var sel = this.selectedRec;
-        this.lastUsedCitationStyle='insertImage';    
+        //this.lastUsedCitationStyle='insertImage';
         if(!sel.length){
             window.console.log("Nothing is selected");
             return false;
@@ -86,9 +145,9 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
                 if(img.src !== image.previewImage){
                     var link = sel[i],
                     insLink = '<a href =""'+link.uri+'>'+link.title+'</a> ';
-                    host.insertContentAtFocusPoint(insLink + '</br>');
+                    this.insertCitationToEditor(insLink);
                 }else{
-                    host.insertContentAtFocusPoint(img.outerHTML +'</br>');
+                    this.insertCitationToEditor(img.outerHTML);
                     window.console.log(img);
                 }
             }
@@ -117,7 +176,7 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
         require(['local_eexcess/citationBuilder'],function(CitationProcessor){
             var citjson = that.parseRecToCitation(that.selectedRec);
             var cit = null;
-            window.console.log("selected records")
+            window.console.log("selected records "+that.selectedRec.length+", first: "+that.selectedRec[0]);
             //window.console.log(citjson);
 			//window.console.log("style: "+style);
 			//window.console.log("lastUsedCitationStyle: "+that.lastUsedCitationStyle);
@@ -134,11 +193,11 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
 			}
             if(typeof style === 'undefined'){
                 //window.console.log("running with generic");
-                cit = CitationProcessor(citjson);    
+                cit = new CitationProcessor(citjson);
             }else{
                 //window.console.log("running with specific style");
 				that.lastUsedCitationStyle=style;
-                cit = CitationProcessor(citjson,undefined,style);
+                cit = new CitationProcessor(citjson,undefined,style);
             }
             that.insertCitations(cit);
         });
@@ -161,17 +220,17 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
                     "title":title,
                     "author":[{"family":creator}],
                     "issued":{"date-parts":[[year]]}
-                }
+                };
            citationJSONList[citObj.id] = citObj;
            }
            
-       return citationJSONList;  
+       return citationJSONList;
     },
     insertCitations:function(c){
-        var host = this.get('host');
+        //var host = this.get('host');
         for(var i = 0;i<c.length;i++){
             var cit = c[i];
-            host.insertContentAtFocusPoint(cit+'<br>');
+            this.insertCitationToEditor(cit);
         }
         
     },
@@ -205,7 +264,7 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             preCaretTextRange.setEndPoint("EndToEnd", textRange);
             caretOffset = preCaretTextRange.text.length;
             return preCaretTextRange.cloneContents();
-        }  
+        }
     }
 }, {
     ATTRS:{
