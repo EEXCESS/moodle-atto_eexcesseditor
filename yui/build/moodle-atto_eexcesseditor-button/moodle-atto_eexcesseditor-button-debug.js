@@ -30,14 +30,14 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             text:"Insert Image",
             callback:that.insertImage
           });*/
-        
+        /*
         this.addButton({
             icon: 'icon',
             iconComponent:'atto_eexcesseditor',
             buttonName: 'eexcesseditor',
             callback: this.insertCit
           });
-        /*this.addButton({
+        this.addButton({
             icon: 'icon',
             iconComponent:'atto_eexcesseditor',
             buttonName: 'eexcesseditor',
@@ -51,17 +51,12 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             items:citOpts
         });*/
         window.addEventListener('message',function(e){
-            if(e.data.event=='eexcess.selectionChanged'){
-                that.selectedRec = [];
-                that.selectedRec = e.data.selected;
-                        
-            }else if(e.data.event=="eexcess.queryTriggered"){
+            if(e.data.event=="eexcess.queryTriggered"){
                 that.selectedRec = [];
             }else if(e.data.event=='eexcess.linkItemClicked'){
 				//alert(e.data.data);
 				window.console.log("atto plugin received clicked link: "+e.data.data.id);
 				// trying to hide dashboard
-				
 				that.selectedRec=[e.data.data];
 				that.requireCitations();
                 
@@ -70,6 +65,7 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
 				window.console.log("atto plugin received image: "+e.data.data.id);
 				that.selectedRec=[e.data.data];
 				that.insertImage();
+                window.postMessage({event:'eexcess.log.itemCitedAsImage',data:that.selectedRec},'*');
 			} else if(e.data.event == 'eexcess.screenshot'){
 				window.console.log("atto plugin received screenshot: "+e.data.data);
 				that.insertScreenshot(e.data.data);
@@ -205,12 +201,17 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             return false;
         }
         var that = this;
-        
+        if(style == 'lnk'){
+            that.insertLink();
+            window.postMessage({event:'eexcess.log.itemCitedAsHyperlink',data:that.selectedRec},'*');
+            return false;
+        }
         require(['local_eexcess/citationBuilder'],function(CitationProcessor){
             var citjson = that.parseRecToCitation(that.selectedRec);
             var cit = null;
 				that.lastUsedCitationStyle=style;
                 cit = new CitationProcessor(citjson,undefined,style);
+                window.postMessage({event:'eexcess.log.itemCitedAsText',data:that.selectedRec},'*');
             that.insertCitationToEditor(cit);
         });
     },

@@ -37,5 +37,5 @@ function atto_eexcesseditor_params_for_js(){
 		$styleid = $citArr["lnk"];
 	}
 	
-	return array("citStyles"=>$styleid);
+	return array("citStyles"=>$styleid,"userId"=>$userid);
 }
