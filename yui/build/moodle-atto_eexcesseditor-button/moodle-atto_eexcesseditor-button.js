@@ -30,13 +30,17 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             text:"Insert Image",
             callback:that.insertImage
           });*/
-        /*
+        
         this.addButton({
             icon: 'icon',
             iconComponent:'atto_eexcesseditor',
             buttonName: 'eexcesseditor',
-            callback: this.insertCit
+            callback: function(){
+                window.postMessage({event:'eexcess.openDashboard'},'*');
+                
+            }
           });
+          /*
         this.addButton({
             icon: 'icon',
             iconComponent:'atto_eexcesseditor',
