@@ -1,11 +1,37 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Atto text editor integration version file.
+ *
+ * @package    atto_eexcesseditor
+ * @copyright  bit media e-solutions GmbH <gerhard.doppler@bitmedia.cc>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+function atto_eexcesseditor_strings_for_js() {
+    global $PAGE;
+
+    $PAGE->requires->strings_for_js(array('opendashboard', 'citationstyle'), 'atto_eexcesseditor');
+}
 function atto_eexcesseditor_params_for_js(){
 	global $CFG;
 	global $DB;
 	global $USER;
 	$citFolder = $CFG->dirroot."/local/eexcess/citationStyles";
-	
+
 	$fileArr = get_directory_list($citFolder);
 	$citArr = array();
 	$citStyles = array();
@@ -22,11 +48,10 @@ function atto_eexcesseditor_params_for_js(){
 		$i++;
 	}
 	$adminSettings = get_config('local_eexcess','citation');
-	
+
 	$tablename = "local_eexcess_citation";
 	$userid=$USER->id;
 	$userSettings = $DB->get_record($tablename, array("userid"=>$userid), $fields='*', $strictness=IGNORE_MISSING);
-	
 	
 	if(is_numeric($userSettings->citation)){
 		$styleid = $citArr[intval($userSettings->citation)];
@@ -39,21 +64,21 @@ function atto_eexcesseditor_params_for_js(){
 	}else{
 		$styleid = "lnk";
 	}
-	
+
 	return array("defaultCitStyle"=>$styleid,"citStyles"=>$citStyles,"userId"=>$userid);
 }
 
 function atto_eexcesseditor_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
     // Check the contextlevel is as expected - if your plugin is a block, this becomes CONTEXT_BLOCK, etc.
     if ($context->contextlevel != CONTEXT_MODULE) {
-        return false; 
+        return false;
     }
- 
+
     // Make sure the filearea is one of those used by the plugin.
     if ($filearea !== 'screenshot') {
         return false;
     }
- 
+
     // Make sure the user is logged in and has access to the module (plugins that are not course modules should leave out the 'cm' part).
     require_login($course, true, $cm);
  	/*

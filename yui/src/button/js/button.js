@@ -1,3 +1,36 @@
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/*
+ * @package    atto_eexcesseditor
+ * @copyright  bit media e-solutions GmbH <gerhard.doppler@bitmedia.cc>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+/**
+ * @module moodle-atto_eexcesseditor-button
+ */
+
+/**
+ * Atto text editor eexcesseditor plugin.
+ *
+ * @namespace M.atto_eexcesseditor
+ * @class button
+ * @extends M.editor_atto.EditorPlugin
+ */
+
 Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_atto.EditorPlugin, [], {
     selectedRec:[],
     citationStyles:false,
@@ -7,7 +40,6 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
 	
     initializer: function () {
         // add buttons and tie methods to them
-        
         var that = this;
         window.postMessage({
                     event: 'eexcess.newDashboardSettings',
@@ -49,25 +81,17 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
         
         this.addButton({
             icon: 'icon',
-            title: 'Open EEXCESS Dashboard',
+            title: "opendashboard",
             iconComponent:'atto_eexcesseditor',
             buttonName: 'eexcesseditor',
             callback: function(){
                 window.postMessage({event:'eexcess.openDashboard'},'*');
-                
             }
           });
-          /*
-        this.addButton({
-            icon: 'icon',
-            iconComponent:'atto_eexcesseditor',
-            buttonName: 'eexcesseditor',
-            callback: this.onButtonClick
-          });
-          */
+
         this.addToolbarMenu({
             icon: 'iconcitstyles',
-            title: 'Select Citation Style',
+            title: 'citationstyle',
             iconComponent:'atto_eexcesseditor',
             callback:function(){},
             items:citOpts
@@ -76,14 +100,12 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             if(e.data.event=="eexcess.queryTriggered"){
                 that.selectedRec = [];
             }else if(e.data.event=='eexcess.linkItemClicked'){
-				//alert(e.data.data);
 				window.console.log("atto plugin received clicked link: "+e.data.data.id);
 				// trying to hide dashboard
 				that.selectedRec=[e.data.data];
 				that.requireCitations();
                 
 			}else if(e.data.event=='eexcess.linkImageClicked'){
-				//alert(e.data.data);
 				window.console.log("atto plugin received image: "+e.data.data.id);
 				that.selectedRec=[e.data.data];
 				that.insertImage();
@@ -91,11 +113,7 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
 			} else if(e.data.event == 'eexcess.screenshot'){
 				window.console.log("atto plugin received screenshot: "+e.data.data);
 				that.insertScreenshot(e.data.data);
-                
-				
-				//$('#screenshot-img').attr('src', e.data.data);
 			}
-            
         });
         
         this.get('host').editor.on('key',function(){
@@ -106,7 +124,6 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
 
     },
     insertCit:function(){
-        
         if(this.citationStyles == "lnk"){
             this.insertLink();
         }
@@ -115,31 +132,11 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
         }
     },
 	hideDashboard:function(){
-		/* // just the iframe alone does not help, has to be the eexcess_container
-		var iframes = document.getElementsByTagName('iframe');
-		window.console.log("trying to find dashbord for hiding");
-		for (var i = 0; i < iframes.length; i++) {
-			window.console.log("iframe: "+iframes[i].id)
-			if(iframes[i].id=="moodleEEXCESSdashboard"){
-				iframes[i].style.visibility="hidden";
-				break;
-			}
-		}*/
 		var container=document.getElementById("eexcess_container");
 		container.style.visibility="hidden";
-		//button.removeClass('active'); // would be so nice in jquery - if i had it available here.
 		document.getElementById("eexcess_button").className = "sym-eexcess";
-        
 	},
 	showDashboard:function(){
-		/*
-		var iframes = document.getElementsByTagName('iframe');
-		for (var i = 0; i < iframes.length; i++) {
-			if(iframes[i].id=="moodleEEXCESSdashboard"){
-				iframes[i].style.visibility="visible";
-				break;
-			}
-		}*/
 		var container=document.getElementById("eexcess_container");
 		container.style.visibility="visible";
 	},
@@ -149,10 +146,7 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
         host.focus();
 		host.insertContentAtFocusPoint(s + '<br/>');
 		this.hideDashboard();
-		
-		//this.showDashboard();
-		
-	},
+    },
 	insertScreenshot:function(imagesrc){
         window.console.log('imagesrc');
         window.console.log(imagesrc);
@@ -173,10 +167,8 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
                 }
             }
         });
-        
-	},
+    },
     insertLink:function(){
-        //var host = this.get('host');
         var sel = this.selectedRec;
         this.lastUsedCitationStyle='insertLink';
         
@@ -187,17 +179,12 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             for(var i = 0;i<sel.length;i++){
 				var link = sel[i],
 				insLink = '<a href ="'+link.uri+'" target="_blank">'+link.title+'</a> ';
-				//host.insertContentAtFocusPoint(insLink + '</br>');
 				this.insertCitationToEditor(insLink);
-			}
-            
-                
+			}       
         }
     },
     insertImage:function(){
-        //var host = this.get('host');
         var sel = this.selectedRec;
-        //this.lastUsedCitationStyle='insertImage';
         if(!sel.length){
             window.console.log("Nothing is selected");
             return false;
@@ -217,19 +204,6 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             }
         }
     },
-   
-    /*onButtonClick:function(){
-        this.requireCitations();
-        
-    },
-    onToolbarMenuItemClick:function(e){
-        var idx = e.target.getData("index"),
-            style = this.citationStyles[idx].style;
-        window.console.log(style);
-        this.requireCitations(style);
-        
-    },*/
-    
     requireCitations:function(){
         var style = this.citationStyles;
         if(!this.selectedRec.length){
@@ -275,14 +249,7 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
            
        return citationJSONList;
     },
-    /*insertCitations:function(c){
-        //var host = this.get('host');
-        for(var i = 0;i<c.length;i++){
-            var cit = c[i];
-            this.insertCitationToEditor(cit);
-        }
-        
-    },*/
+    
     getText: function(){
         var host = this.get('host'),
             nodes = this.getNodesUntilCursor(host.editor.getDOMNode()),
