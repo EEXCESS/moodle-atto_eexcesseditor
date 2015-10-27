@@ -43,6 +43,8 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
     initializer: function () {
         // add buttons and tie methods to them
         var that = this;
+        /* no longer necessary as the local plugin sends the
+        dashboard settings if it receives the paragraphEnd event
         window.postMessage({
                     event: 'eexcess.newDashboardSettings',
                     settings: {
@@ -52,20 +54,17 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
                         showLinkItemButton: true,
                         showScreenshotButton: true
                     }
-                },'*');
+                },'*');`
+                */
         that.citationStyles = this.get('defaultCitStyle');
         var citStyleList = this.get('citStyles');
         this.citStyleList = citStyleList;
         that.userID = this.get("userId");
-        //window.console.log(citStyleList);
-        window.console.log(citStyleList);
         var citOpts = [];
         for(var i = 0;i<citStyleList.length;i++){
-            window.console.log(citStyleList[i].val);
             var opt = {
                         text:citStyleList[i].label,
                         callback:function(e,args){
-                            window.console.log(args);
                           that.saveSelectedCitation(args);
                         },
                         callbackArgs:citStyleList[i].val
@@ -102,25 +101,20 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             if(e.data.event=="eexcess.queryTriggered"){
                 that.selectedRec = [];
             }else if(e.data.event=='eexcess.linkItemClicked'){
-				window.console.log("atto plugin received clicked link: "+e.data.data.id);
 				// trying to hide dashboard
 				that.selectedRec=[e.data.data];
 				that.requireCitations();
                 
 			}else if(e.data.event=='eexcess.linkImageClicked'){
-				window.console.log("atto plugin received image: "+e.data.data.id);
 				that.selectedRec=[e.data.data];
 				that.insertImage();
-                window.postMessage({event:'eexcess.log.itemCitedAsImage',data:that.selectedRec},'*');
+                window.postMessage({event:'eexcess.log.itemCitedAsImage',data:that.selectedRec[0]},'*');
 			} else if(e.data.event == 'eexcess.screenshot'){
-				window.console.log("atto plugin received screenshot: "+e.data.data);
 				that.insertScreenshot(e.data.data);
 			}
         });
         
         this.get('host').editor.on('key',function(){
-            var txt = that.getText();
-            window.console.log('Querying for text: "'+  txt+'"');
             window.postMessage({event:'eexcess.paragraphEnd',text:that.getText()},'*');
         },'enter');
 
@@ -144,14 +138,11 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
 	},
 	insertCitationToEditor:function(s){
 		var host=this.get('host');
-		window.console.log('got to insert: '+s);
         host.focus();
 		host.insertContentAtFocusPoint(s + '<br/>');
 		this.hideDashboard();
     },
 	insertScreenshot:function(imagesrc){
-        window.console.log('imagesrc');
-        window.console.log(imagesrc);
         var that = this;
         var url = M.cfg.wwwroot + '/lib/editor/atto/plugins/eexcesseditor/savescreen.php';
 
@@ -162,8 +153,6 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             method: 'POST',
             on:{
                 success:function(r,arg){
-                    window.console.log("response");
-                    window.console.log(arg);
                     var imagetag="<img src='"+decodeURI(arg.response)+"'/>";
                     that.insertCitationToEditor(imagetag);
                 }
@@ -175,20 +164,18 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
         this.lastUsedCitationStyle='insertLink';
         
         if(!sel.length){
-            window.console.log("Nothing is selected");
             return false;
         }else{
             for(var i = 0;i<sel.length;i++){
 				var link = sel[i],
 				insLink = '<a href ="'+link.uri+'" target="_blank">'+link.title+'</a> ';
 				this.insertCitationToEditor(insLink);
-			}       
+			}
         }
     },
     insertImage:function(){
         var sel = this.selectedRec;
         if(!sel.length){
-            window.console.log("Nothing is selected");
             return false;
         }else{
          for(var i = 0; i<sel.length;i++){
@@ -201,7 +188,6 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
                     this.insertCitationToEditor(insLink);
                 }else{
                     this.insertCitationToEditor(img.outerHTML);
-                    window.console.log(img);
                 }
             }
         }
@@ -209,13 +195,12 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
     requireCitations:function(){
         var style = this.citationStyles;
         if(!this.selectedRec.length){
-            window.console.log("Nothing is selected");
             return false;
         }
         var that = this;
         if(style == 'lnk'){
             that.insertLink();
-            window.postMessage({event:'eexcess.log.itemCitedAsHyperlink',data:that.selectedRec},'*');
+            window.postMessage({event:'eexcess.log.itemCitedAsHyperlink',data:that.selectedRec[0]},'*');
             return false;
         }
         require(['local_eexcess/citationBuilder'],function(CitationProcessor){
@@ -223,7 +208,7 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             var cit = null;
 				that.lastUsedCitationStyle=style;
                 cit = new CitationProcessor(citjson,undefined,style);
-                window.postMessage({event:'eexcess.log.itemCitedAsText',data:that.selectedRec},'*');
+                window.postMessage({event:'eexcess.log.itemCitedAsText',data:that.selectedRec[0]},'*');
             that.insertCitationToEditor(cit);
         });
     },
