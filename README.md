@@ -40,7 +40,7 @@ Necessary steps:
 5. Click continue.
 6. Installing EEXCESS plugin finished.
 
-After installation, button EEXCESS (for displaying the recommendations) will appear in toolbar atto.
+After installation, 2 buttons EEXCESS (button![display_res](https://raw.githubusercontent.com/EEXCESS/MoodleAttoEditorPlugin/master/docs/atto_toolbar_menu_open_rec.png)for displaying the recommendations, button![cit_style](https://raw.githubusercontent.com/EEXCESS/MoodleAttoEditorPlugin/master/docs/atto_toolbar_menu_select_cit_style.png)for change and insert citation) will appear in toolbar atto.
 
 ![atto_toolbar_menu](https://raw.githubusercontent.com/EEXCESS/MoodleAttoEditorPlugin/master/docs/atto_toolbar_menu.png)
 
@@ -76,6 +76,11 @@ Go to Site administration/Plugins/Local plugins/EEXCESS settings has 2 options:
 ![admin_settings](https://raw.githubusercontent.com/EEXCESS/MoodleAttoEditorPlugin/master/docs/EEXCESS_admin_settings.png)
 
 ### User settings:
+In navigation block go to EEXCESS settings/Interests to add interests tags.
+
+![interests](https://raw.githubusercontent.com/EEXCESS/MoodleAttoEditorPlugin/master/docs/EEXCESS_user_interests_settings.png)
+
 In navigation block go to EEXCESS settings/Citation settings to change the citation style.
 
-![user_settings](https://raw.githubusercontent.com/EEXCESS/MoodleAttoEditorPlugin/master/docs/EEXCESS_user_settings.png)
+![citation](https://raw.githubusercontent.com/EEXCESS/MoodleAttoEditorPlugin/master/docs/EEXCESS_user_settings.png)
+
