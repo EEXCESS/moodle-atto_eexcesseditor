@@ -119,14 +119,7 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
         },'enter');
 
     },
-    insertCit:function(){
-        if(this.citationStyles == "lnk"){
-            this.insertLink();
-        }
-        else{
-            this.requireCitations();
-        }
-    },
+    
 	hideDashboard:function(){
 		var container=document.getElementById("eexcess_container");
 		container.style.visibility="hidden";
@@ -139,7 +132,7 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
 	insertCitationToEditor:function(s){
 		var host=this.get('host');
         host.focus();
-		host.insertContentAtFocusPoint(s + '<br/>');
+        host.insertContentAtFocusPoint(s + '<br/>');
 		this.hideDashboard();
     },
 	insertScreenshot:function(imagesrc){

@@ -23,6 +23,7 @@
  */
  
 defined('MOODLE_INTERNAL') || die();
-
-$plugin->version   = 2015081900;
 $plugin->component = 'atto_eexcesseditor';
+$plugin->version   = 2015103100;
+$plugin->requires = 2015051100;
+$plugin->maturity = MATURITY_STABLE;

@@ -27,7 +27,7 @@ define('AJAX_SCRIPT', true);
 require_once(dirname(__FILE__) . '/../../../../../config.php');
 $tablename = "local_eexcess_citation";
 $userid=$USER->id;
-$citstyle = required_param('citstyle', PARAM_INT);
+$citstyle = $_POST['citstyle'];
 $user_setting = $DB->get_record($tablename, array("userid"=>$userid), $fields='*', $strictness=IGNORE_MISSING);
 if($user_setting==false){
 		//insert
