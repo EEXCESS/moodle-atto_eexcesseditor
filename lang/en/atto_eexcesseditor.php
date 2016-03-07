@@ -15,13 +15,13 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Atto text editor integration version file.
+ * Language strings.
  *
  * @package    atto_eexcesseditor
  * @copyright  bit media e-solutions GmbH <gerhard.doppler@bitmedia.cc>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
+
 $string['pluginname'] = 'EEXCESS Editor';
-$string['opendashboard'] = 'Open EEXCESS Dashboard';
 $string['citationstyle'] = 'Select Citation Style';
+$string['noaccess'] = 'You no have premissions in eexcess plugin';

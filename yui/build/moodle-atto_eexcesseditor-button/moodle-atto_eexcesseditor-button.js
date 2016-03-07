@@ -38,37 +38,27 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
     citationStyles:false,
     citStyleList:[],
     userID:null,
-   
-	
+    respError: false,
+
     initializer: function () {
-        // add buttons and tie methods to them
+        window.postMessage({event: 'attoEditorOpened',data:""},'*');
+        // Add buttons and tie methods to them.
         var that = this;
-        /* no longer necessary as the local plugin sends the
-        dashboard settings if it receives the paragraphEnd event
-        window.postMessage({
-                    event: 'eexcess.newDashboardSettings',
-                    settings: {
-                        selectedChart: 'timeline',
-                        hideCollections: false,
-                        showLinkImageButton: true,
-                        showLinkItemButton: true,
-                        showScreenshotButton: true
-                    }
-                },'*');`
-                */
+
         that.citationStyles = this.get('defaultCitStyle');
         var citStyleList = this.get('citStyles');
         this.citStyleList = citStyleList;
         that.userID = this.get("userId");
+        that.respError = this.get("respError");
         var citOpts = [];
         for(var i = 0;i<citStyleList.length;i++){
             var opt = {
-                        text:citStyleList[i].label,
-                        callback:function(e,args){
-                          that.saveSelectedCitation(args);
-                        },
-                        callbackArgs:citStyleList[i].val
-                    };
+                    text:citStyleList[i].label,
+                    callback:function(e,args){
+                        that.saveSelectedCitation(args);
+                    },
+                callbackArgs:citStyleList[i].val
+                };
             citOpts.push(opt);
         }
         citOpts.push({
@@ -77,18 +67,7 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
                 that.saveSelectedCitation(args);
             },
             callbackArgs:'lnk'
-          });
-
-        
-        this.addButton({
-            icon: 'icon',
-            title: "opendashboard",
-            iconComponent:'atto_eexcesseditor',
-            buttonName: 'eexcesseditor',
-            callback: function(){
-                window.postMessage({event:'eexcess.openDashboard'},'*');
-            }
-          });
+        });
 
         this.addToolbarMenu({
             icon: 'iconcitstyles',
@@ -98,44 +77,31 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             items:citOpts
         });
         window.addEventListener('message',function(e){
-            if(e.data.event=="eexcess.queryTriggered"){
+            if(e.data.event === "eexcess.queryTriggered") {
                 that.selectedRec = [];
-            }else if(e.data.event=='eexcess.linkItemClicked'){
-				// trying to hide dashboard
-				that.selectedRec=[e.data.data];
-				that.requireCitations();
-                
-			}else if(e.data.event=='eexcess.linkImageClicked'){
-				that.selectedRec=[e.data.data];
-				that.insertImage();
+            } else if(e.data.event === 'eexcess.linkItemClicked') {
+                that.selectedRec = [e.data.data];
+                that.requireCitations();
+            } else if(e.data.event === 'eexcess.linkImageClicked') {
+                that.selectedRec = [e.data.data];
+                that.insertImage();
                 window.postMessage({event:'eexcess.log.itemCitedAsImage',data:that.selectedRec[0]},'*');
-			} else if(e.data.event == 'eexcess.screenshot'){
-				that.insertScreenshot(e.data.data);
-			}
+            } else if(e.data.event === 'eexcess.screenshot') {
+                that.insertScreenshot(e.data.data);
+            }
         });
-        
-        this.get('host').editor.on('key',function(){
+
+        this.get('host').editor.on('key',function() {
             window.postMessage({event:'eexcess.paragraphEnd',text:that.getText()},'*');
         },'enter');
 
     },
-    
-	hideDashboard:function(){
-		var container=document.getElementById("eexcess_container");
-		container.style.visibility="hidden";
-		document.getElementById("eexcess_button").className = "sym-eexcess";
-	},
-	showDashboard:function(){
-		var container=document.getElementById("eexcess_container");
-		container.style.visibility="visible";
-	},
-	insertCitationToEditor:function(s){
-		var host=this.get('host');
+    insertCitationToEditor:function(s) {
+        var host=this.get('host');
         host.focus();
         host.insertContentAtFocusPoint(s + '<br/>');
-		this.hideDashboard();
     },
-	insertScreenshot:function(imagesrc){
+    insertScreenshot:function(imagesrc) {
         var that = this;
         var url = M.cfg.wwwroot + '/lib/editor/atto/plugins/eexcesseditor/savescreen.php';
 
@@ -152,32 +118,32 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             }
         });
     },
-    insertLink:function(){
+    insertLink:function() {
         var sel = this.selectedRec;
-        this.lastUsedCitationStyle='insertLink';
-        
-        if(!sel.length){
+        this.lastUsedCitationStyle = 'insertLink';
+
+        if(!sel.length) {
             return false;
-        }else{
-            for(var i = 0;i<sel.length;i++){
-				var link = sel[i],
-				insLink = '<a href ="'+link.uri+'" target="_blank">'+link.title+'</a> ';
-				this.insertCitationToEditor(insLink);
-			}
+        } else {
+            for(var i = 0;i < sel.length;i++){
+                var link = sel[i],
+                insLink = '<a href ="' + link.uri + '" target="_blank">' + link.title + '</a> ';
+                this.insertCitationToEditor(insLink);
+            }
         }
     },
-    insertImage:function(){
+    insertImage:function() {
         var sel = this.selectedRec;
         if(!sel.length){
             return false;
-        }else{
-         for(var i = 0; i<sel.length;i++){
+        } else {
+         for(var i = 0; i<sel.length;i++) {
              var img = window.document.createElement('img'),
-                 image = sel[i];
+                image = sel[i];
                 img.src = image.previewImage;
                 if(img.src !== image.previewImage){
                     var link = sel[i],
-                    insLink = '<a href =""'+link.uri+'>'+link.title+'</a> ';
+                    insLink = '<a href =""' + link.uri + '>' + link.title + '</a> ';
                     this.insertCitationToEditor(insLink);
                 }else{
                     this.insertCitationToEditor(img.outerHTML);
@@ -185,13 +151,13 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             }
         }
     },
-    requireCitations:function(){
+    requireCitations:function() {
         var style = this.citationStyles;
         if(!this.selectedRec.length){
             return false;
         }
         var that = this;
-        if(style == 'lnk'){
+        if(style === 'lnk'){
             that.insertLink();
             window.postMessage({event:'eexcess.log.itemCitedAsHyperlink',data:that.selectedRec[0]},'*');
             return false;
@@ -199,15 +165,15 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
         require(['local_eexcess/citationBuilder'],function(CitationProcessor){
             var citjson = that.parseRecToCitation(that.selectedRec);
             var cit = null;
-				that.lastUsedCitationStyle=style;
-                cit = new CitationProcessor(citjson,undefined,style);
-                window.postMessage({event:'eexcess.log.itemCitedAsText',data:that.selectedRec[0]},'*');
+            that.lastUsedCitationStyle=style;
+            cit = new CitationProcessor(citjson,undefined,style);
+            window.postMessage({event:'eexcess.log.itemCitedAsText',data:that.selectedRec[0]},'*');
             that.insertCitationToEditor(cit);
         });
     },
-    parseRecToCitation: function(recomendations){
+    parseRecToCitation: function(recomendations) {
         var citationJSONList = {};
-        for(var i = 0;i<recomendations.length;i++){
+        for(var i = 0;i<recomendations.length;i++) {
             var r = recomendations[i],
                 id = typeof r.id === 'undefined' ? "":r.id,
                 collectionName = typeof r.collectionName === 'undefined' ? "":r.collectionName,
@@ -225,12 +191,11 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
                     "issued":{"date-parts":[[year]]}
                 };
            citationJSONList[citObj.id] = citObj;
-           }
+        }
            
-       return citationJSONList;
+        return citationJSONList;
     },
-    
-    getText: function(){
+    getText: function() {
         var host = this.get('host'),
             nodes = this.getNodesUntilCursor(host.editor.getDOMNode()),
             text = null;
@@ -246,14 +211,14 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
     },
     getNodesUntilCursor: function (element) {
         var caretOffset = 0;
-        if (typeof window.getSelection != "undefined") {
+        if (typeof window.getSelection !== "undefined") {
             var range = window.getSelection().getRangeAt(0);
             var preCaretRange = range.cloneRange();
             preCaretRange.selectNodeContents(element);
             preCaretRange.setEnd(range.endContainer, range.endOffset);
             caretOffset = preCaretRange.toString().length;
             return preCaretRange.cloneContents();
-        } else if (typeof document.selection != "undefined" && document.selection.type != "Control") {
+        } else if (typeof document.selection !== "undefined" && document.selection.type !== "Control") {
             var textRange = document.selection.createRange();
             var preCaretTextRange = document.body.createTextRange();
             preCaretTextRange.moveToElementText(element);
@@ -262,10 +227,11 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             return preCaretTextRange.cloneContents();
         }
     },
-    saveSelectedCitation:function(styleId){
+    saveSelectedCitation:function(styleId) {
         var url = M.cfg.wwwroot + '/lib/editor/atto/plugins/eexcesseditor/savecit.php';
         var userid = this.userID;
-        if(styleId =='lnk'){
+        var respErr = this.respError;
+        if(styleId === 'lnk'){
             this.citationStyles = styleId;
         }else{
             this.citationStyles = this.citStyleList[styleId].content;
@@ -278,9 +244,12 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             },
             method: 'POST',
             on:{
-                success:function(r){
-                    window.console.log("response");
-                    window.console.log(r);
+                success:function(){
+                    if(respErr !== false){
+                        window.alert(respErr);
+                    }else{
+                        window.console.log("response");
+                    }
                 }
             }
         });
@@ -294,6 +263,9 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             value:false
         },
         userId:{
+            value:false
+        },
+        respError:{
             value:false
         }
     }

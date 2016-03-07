@@ -21,9 +21,9 @@
  * @copyright  bit media e-solutions GmbH <gerhard.doppler@bitmedia.cc>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
+
 defined('MOODLE_INTERNAL') || die();
 $plugin->component = 'atto_eexcesseditor';
-$plugin->version   = 2015103100;
+$plugin->version   = 2016030700;
 $plugin->requires = 2015051100;
 $plugin->maturity = MATURITY_STABLE;

@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Atto text editor integration version file.
+ * Install utility.
  *
  * @package    atto_eexcesseditor
  * @copyright  bit media e-solutions GmbH <gerhard.doppler@bitmedia.cc>

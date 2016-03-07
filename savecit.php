@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Atto text editor integration version file.
+ * Save citation style.
  *
  * @package    atto_eexcesseditor
  * @copyright  bit media e-solutions GmbH <gerhard.doppler@bitmedia.cc>
@@ -26,21 +26,23 @@ define('AJAX_SCRIPT', true);
 
 require_once(dirname(__FILE__) . '/../../../../../config.php');
 $tablename = "local_eexcess_citation";
-$userid=$USER->id;
-$citstyle = $_POST['citstyle'];
-$user_setting = $DB->get_record($tablename, array("userid"=>$userid), $fields='*', $strictness=IGNORE_MISSING);
-if($user_setting==false){
-		//insert
-		$s = new stdClass();
-		$s->id = null;
-		$s->userid = $userid;
-		$s->citation = $citstyle;
-		$r = $DB->insert_record($tablename,$s);
-	}else{
-		//update
-		$user_setting->citation = $citstyle;
-		$r = $DB->update_record($tablename,$user_setting);
-	}
-//$user_setting->citation = $citstyle;
-//$DB->update_record($tablename,$user_setting);
+$userid = $USER->id;
+
+$systemcontext = context_system::instance();
+if(isloggedin() && has_capability('local/eexcess:managedata', $systemcontext)){
+    $citstyle = optional_param('citstyle', false, PARAM_TEXT);
+    $user_setting = $DB->get_record($tablename, array("userid" => $userid), $fields='*', $strictness = IGNORE_MISSING);
+    if($user_setting==false){
+        // Insert.
+        $s = new stdClass();
+        $s->id = null;
+        $s->userid = $userid;
+        $s->citation = $citstyle;
+        $r = $DB->insert_record($tablename,$s);
+    } else {
+        // Update.
+        $user_setting->citation = $citstyle;
+        $r = $DB->update_record($tablename,$user_setting);
+}
 echo json_encode(array("res",$r));
+}

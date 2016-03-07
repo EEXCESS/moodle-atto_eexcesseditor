@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Atto text editor integration version file.
+ * Save screenshot.
  *
  * @package    atto_eexcesseditor
  * @copyright  bit media e-solutions GmbH <gerhard.doppler@bitmedia.cc>
@@ -29,7 +29,7 @@ $imgUrl = $CFG->wwwroot."/lib/editor/atto/plugins/eexcesseditor/pix/screenshots/
 $guid = uniqid();
 $filename = $guid."_file.png";
 $tmppath = $screensFolder.$filename;
-$data = $_POST["imgdata"];
+$data = optional_param("imgdata", false, PARAM_TEXT);
 $fdata = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data));
 file_put_contents($tmppath, $fdata);
 $context = context_system::instance();
