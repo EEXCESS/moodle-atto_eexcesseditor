@@ -24,11 +24,11 @@
  
 define('AJAX_SCRIPT', true);
 require_once(dirname(__FILE__) . '/../../../../../config.php');
-$screensFolder = $CFG->dirroot."/lib/editor/atto/plugins/eexcesseditor/pix/screenshots/";
-$imgUrl = $CFG->wwwroot."/lib/editor/atto/plugins/eexcesseditor/pix/screenshots/";
+$screens_folder = $CFG->dirroot."/lib/editor/atto/plugins/eexcesseditor/pix/screenshots/";
+$img_url = $CFG->wwwroot."/lib/editor/atto/plugins/eexcesseditor/pix/screenshots/";
 $guid = uniqid();
 $filename = $guid."_file.png";
-$tmppath = $screensFolder.$filename;
+$tmppath = $screens_folder.$filename;
 $data = optional_param("imgdata", false, PARAM_TEXT);
 $fdata = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data));
 file_put_contents($tmppath, $fdata);
@@ -36,7 +36,7 @@ $context = context_system::instance();
 $fs = get_file_storage();
 $file_record = array(
     'contextid'=>$context->id,
-    'component'=>'local_eexcess',
+    'component'=>'block_eexcess',
     'filearea'=>'screenshot',
     'itemid'=>0,
     'filepath'=>'/',
@@ -46,5 +46,5 @@ $file_record = array(
 
 $file = $fs->create_file_from_pathname($file_record, $tmppath);
 unlink($tmppath);
-$fullpath = "{$CFG->wwwroot}/pluginfile.php/{$file->get_contextid()}/local_eexcess/screenshot/{$file->get_itemid()}/{$file->get_filename()}";
+$fullpath = "{$CFG->wwwroot}/pluginfile.php/{$file->get_contextid()}/block_eexcess/screenshot/{$file->get_itemid()}/{$file->get_filename()}";
 echo $fullpath;

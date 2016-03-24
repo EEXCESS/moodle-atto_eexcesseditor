@@ -15,15 +15,25 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Atto text editor integration version file.
+ * Save image license.
  *
  * @package    atto_eexcesseditor
  * @copyright  bit media e-solutions GmbH <gerhard.doppler@bitmedia.cc>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-$plugin->component = 'atto_eexcesseditor';
-$plugin->version   = 2016030701;
-$plugin->requires = 2015051100;
-$plugin->maturity = MATURITY_STABLE;
+define('AJAX_SCRIPT', true);
+require_once(dirname(__FILE__) . '/../../../../../config.php');
+$tablename = "block_eexcess_image_license";
+$userid = $USER->id;
+
+$systemcontext = context_system::instance();
+if(isloggedin() && has_capability('block/eexcess:myaddinstance', $systemcontext)){
+    $license = optional_param('license', false, PARAM_TEXT);
+
+    $ins = new stdClass();
+    $ins->id = null;
+    $ins->userid = $userid;
+    $ins->license = $license;
+    $DB->insert_record($tablename,$ins);
+}

@@ -25,11 +25,11 @@
 define('AJAX_SCRIPT', true);
 
 require_once(dirname(__FILE__) . '/../../../../../config.php');
-$tablename = "local_eexcess_citation";
+$tablename = "block_eexcess_citation";
 $userid = $USER->id;
 
 $systemcontext = context_system::instance();
-if(isloggedin() && has_capability('local/eexcess:managedata', $systemcontext)){
+if(isloggedin() && has_capability('block/eexcess:myaddinstance', $systemcontext)){
     $citstyle = optional_param('citstyle', false, PARAM_TEXT);
     $user_setting = $DB->get_record($tablename, array("userid" => $userid), $fields='*', $strictness = IGNORE_MISSING);
     if($user_setting==false){

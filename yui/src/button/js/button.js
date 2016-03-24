@@ -37,6 +37,7 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
     citStyleList:[],
     userID:null,
     respError: false,
+    imgLicense:[],//Added in new version license for img
 
     initializer: function () {
         window.postMessage({event: 'attoEditorOpened',data:""},'*');
@@ -48,6 +49,8 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
         this.citStyleList = citStyleList;
         that.userID = this.get("userId");
         that.respError = this.get("respError");
+        that.imgLicense = this.get("imgLicense");
+        
         var citOpts = [];
         for(var i = 0;i<citStyleList.length;i++){
             var opt = {
@@ -82,7 +85,7 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
                 that.requireCitations();
             } else if(e.data.event === 'eexcess.linkImageClicked') {
                 that.selectedRec = [e.data.data];
-                that.insertImage();
+                that.checkImageLicense(that.selectedRec);
                 window.postMessage({event:'eexcess.log.itemCitedAsImage',data:that.selectedRec[0]},'*');
             } else if(e.data.event === 'eexcess.screenshot') {
                 that.insertScreenshot(e.data.data);
@@ -225,6 +228,35 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             return preCaretTextRange.cloneContents();
         }
     },
+    checkImageLicense: function(selectedRec) {
+        var that = this;
+        var checkLicense = false;
+            for( var i = 0; i < this.imgLicense.length; i++){
+                if(this.imgLicense[i] === selectedRec[0].facets.license){
+                    checkLicense = true;
+                }
+            }
+            if(checkLicense !== false){
+                this.insertImage();
+            }else{
+                if(confirm(M.util.get_string("add_license", "atto_eexcesseditor") + "\n\n" + selectedRec[0].facets.license)){
+                    var url = M.cfg.wwwroot + '/lib/editor/atto/plugins/eexcesseditor/savelicense.php';
+                    var license =  selectedRec[0].facets.license;
+                    Y.io(url,{
+            data: {
+                license:license
+            },
+            method: 'POST',
+            on:{
+                success:function(){
+                    that.insertImage();
+                }
+            }
+        });
+                }
+            }
+            
+    },
     saveSelectedCitation:function(styleId) {
         var url = M.cfg.wwwroot + '/lib/editor/atto/plugins/eexcesseditor/savecit.php';
         var userid = this.userID;
@@ -264,6 +296,9 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             value:false
         },
         respError:{
+            value:false
+        },
+        imgLicense:{
             value:false
         }
     }
