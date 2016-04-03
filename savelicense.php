@@ -28,12 +28,12 @@ $tablename = "block_eexcess_image_license";
 $userid = $USER->id;
 
 $systemcontext = context_system::instance();
-if(isloggedin() && has_capability('block/eexcess:myaddinstance', $systemcontext)){
+if (isloggedin() && has_capability('block/eexcess:myaddinstance', $systemcontext)) {
     $license = optional_param('license', false, PARAM_TEXT);
 
     $ins = new stdClass();
     $ins->id = null;
     $ins->userid = $userid;
     $ins->license = $license;
-    $DB->insert_record($tablename,$ins);
+    $DB->insert_record($tablename, $ins);
 }

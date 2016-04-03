@@ -21,7 +21,7 @@
  * @copyright  bit media e-solutions GmbH <gerhard.doppler@bitmedia.cc>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
+
 define('AJAX_SCRIPT', true);
 
 require_once(dirname(__FILE__) . '/../../../../../config.php');
@@ -29,20 +29,20 @@ $tablename = "block_eexcess_citation";
 $userid = $USER->id;
 
 $systemcontext = context_system::instance();
-if(isloggedin() && has_capability('block/eexcess:myaddinstance', $systemcontext)){
+if (isloggedin() && has_capability('block/eexcess:myaddinstance', $systemcontext)) {
     $citstyle = optional_param('citstyle', false, PARAM_TEXT);
-    $user_setting = $DB->get_record($tablename, array("userid" => $userid), $fields='*', $strictness = IGNORE_MISSING);
-    if($user_setting==false){
+    $usersetting = $DB->get_record($tablename, array("userid" => $userid), $fields = '*', $strictness = IGNORE_MISSING);
+    if ($usersetting === false) {
         // Insert.
         $s = new stdClass();
         $s->id = null;
         $s->userid = $userid;
         $s->citation = $citstyle;
-        $r = $DB->insert_record($tablename,$s);
+        $r = $DB->insert_record($tablename, $s);
     } else {
         // Update.
-        $user_setting->citation = $citstyle;
-        $r = $DB->update_record($tablename,$user_setting);
-}
-echo json_encode(array("res",$r));
+        $usersetting->citation = $citstyle;
+        $r = $DB->update_record($tablename, $usersetting);
+    }
+    echo json_encode(array("res", $r));
 }

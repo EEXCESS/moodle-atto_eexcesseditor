@@ -39,65 +39,65 @@ function atto_eexcesseditor_params_for_js() {
     global $DB;
     global $USER;
 
-    $cit_folder = $CFG->dirroot."/blocks/eexcess/citationStyles";
-    $fileArr = get_directory_list($cit_folder);
-    $cit_arr = array();
-    $cit_styles = array();
+    $citfolder = $CFG->dirroot."/blocks/eexcess/citationStyles";
+    $filearr = get_directory_list($citfolder);
+    $citarr = array();
+    $citstyles = array();
     $i = 0;
-    foreach($fileArr as $value) {
-        $file_path = $cit_folder."/".$value;
-        $file_content = file_get_contents($file_path);
-        $simple_xml = simplexml_load_string($file_content);
-        $name = (string) $simple_xml->info->title;
-        $cit_arr[] = $file_content;
-        $cit_styles[] = array("label"=>$name,"val"=>"$i","content"=>$file_content);
+    foreach ($filearr as $value) {
+        $filepath = $citfolder."/".$value;
+        $filecontent = file_get_contents($filepath);
+        $simplexml = simplexml_load_string($filecontent);
+        $name = (string) $simplexml->info->title;
+        $citarr[] = $filecontent;
+        $citstyles[] = array("label" => $name, "val" => "$i", "content" => $filecontent);
         $i++;
     }
     $userid = $USER->id;
     $countlicense = 0;
-    $admin_license_img = get_config('block_eexcess','img_license');
-    if(strlen($admin_license_img) > 0) {
-        $admin_license_img_arr = explode(',', $admin_license_img);
-        foreach($admin_license_img_arr as $value){
-            $admin_license_final[$countlicense] = trim($value);
+    $adminlicenseimg = get_config('block_eexcess', 'img_license');
+    if (strlen($adminlicenseimg) > 0) {
+        $adminlicenseimgarr = explode(',', $adminlicenseimg);
+        foreach ($adminlicenseimgarr as $value) {
+            $adminlicensefinal[$countlicense] = trim($value);
             $countlicense++;
         }
     } else {
-        $admin_license_final = false;
+        $adminlicensefinal = false;
     }
-    $user_license_img = $DB->get_records('block_eexcess_image_license', array("userid"=>$userid));
-    $count_user_license = 0;
-    if(count($user_license_img) > 0){
-        foreach($user_license_img as $value){
-            $user_license_img_final[$count_user_license] = trim($value->license);
-            $count_user_license++;
+    $userlicenseimg = $DB->get_records('block_eexcess_image_license', array("userid" => $userid));
+    $countuserlicense = 0;
+    if (count($userlicenseimg) > 0) {
+        foreach ($userlicenseimg as $value) {
+            $userlicenseimgfinal[$countuserlicense] = trim($value->license);
+            $countuserlicense++;
         }
     } else {
-        $user_license_img_final = false;
+        $userlicenseimgfinal = false;
     }
-    if($admin_license_final !== false && $user_license_img_final !== false){
-        $all_licenses = array_merge ($admin_license_final, $user_license_img_final);
-    } else if($admin_license_final !== false && $user_license_img_final === false){
-        $all_licenses = $admin_license_final;
-    } else if($admin_license_final === false && $user_license_img_final !== false){
-        $all_licenses = $user_license_img_final;
+    if ($adminlicensefinal !== false && $userlicenseimgfinal !== false) {
+        $alllicenses = array_merge ($adminlicensefinal, $userlicenseimgfinal);
+    } else if ($adminlicensefinal !== false && $userlicenseimgfinal === false) {
+        $alllicenses = $adminlicensefinal;
+    } else if ($adminlicensefinal === false && $userlicenseimgfinal !== false) {
+        $alllicenses = $userlicenseimgfinal;
     } else {
-        $all_licenses = false;
+        $alllicenses = false;
     }
-    $admin_settings = get_config('block_eexcess','citation');
+    $adminsettings = get_config('block_eexcess', 'citation');
     $tablename = "block_eexcess_citation";
-    $user_settings = $DB->get_record($tablename, array("userid"=>$userid), $fields='*');
-    if($user_settings != false) {
-        if(is_numeric($user_settings->citation)){
-            $styleid = $cit_arr[intval($user_settings->citation)];
-        } elseif($user_settings->citation!=false) {
-            $styleid = $user_settings->citation;
+    $usersettings = $DB->get_record($tablename, array("userid" => $userid), $fields = '*');
+    if ($usersettings != false) {
+        if (is_numeric($usersettings->citation)) {
+            $styleid = $citarr[intval($usersettings->citation)];
+        } else if ($usersettings->citation != false) {
+            $styleid = $usersettings->citation;
         }
     } else {
-        if(is_numeric($admin_settings)) {
-            $styleid = $cit_arr[intval($admin_settings)];
-        } elseif($admin_settings != false) {
-            $styleid = $admin_settings;
+        if (is_numeric($adminsettings)) {
+            $styleid = $citarr[intval($adminsettings)];
+        } else if ($adminsettings != false) {
+            $styleid = $adminsettings;
         } else {
             $styleid = "lnk";
         }
@@ -105,11 +105,11 @@ function atto_eexcesseditor_params_for_js() {
     $systemcontext = context_system::instance();
     if (isloggedin() && has_capability('block/eexcess:myaddinstance', $systemcontext)) {
 
-        return array("defaultCitStyle"=>$styleid, "citStyles"=>$cit_styles, "userId"=>$userid, "imgLicense"=>$all_licenses);
+        return array("defaultCitStyle" => $styleid, "citStyles" => $citstyles, "userId" => $userid, "imgLicense" => $alllicenses);
 
     } else {
-        $resp_error = get_string('noaccess', 'atto_eexcesseditor');
-        return array("defaultCitStyle"=>$styleid,"citStyles"=>$cit_styles, "userId"=>$userid, "respError"=>$resp_error);
+        $resperror = get_string('noaccess', 'atto_eexcesseditor');
+        return array("defaultCitStyle" => $styleid, "citStyles" => $citstyles, "userId" => $userid, "respError" => $resperror);
     }
 }
 function atto_eexcesseditor_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
@@ -123,17 +123,18 @@ function atto_eexcesseditor_pluginfile($course, $cm, $context, $filearea, $args,
         return false;
     }
 
-    // Make sure the user is logged in and has access to the module (plugins that are not course modules should leave out the 'cm' part).
+    // Make sure the user is logged in and has access to the module (plugins that are not course modules should leave
+    // out the 'cm' part).
     require_login($course, true, $cm);
 
     // Extract the filename / filepath from the $args array.
     $filename = array_pop($args); // The last item in the $args array.
     if (!$args) {
-        $filepath = '/'; // $args is empty => the path is '/'
+        $filepath = '/'; // $args is empty => the path is '/'.
     } else {
-        $filepath = '/'.implode('/', $args).'/'; // $args contains elements of the filepath
+        $filepath = '/'.implode('/', $args).'/'; // $args contains elements of the filepath.
     }
- 
+
     // Retrieve the file from the Files API.
     $fs = get_file_storage();
     $file = $fs->get_file($context->id, 'atto_eexcesseditor', $filearea, $itemid, $filepath, $filename);

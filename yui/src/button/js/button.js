@@ -37,11 +37,11 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
     citStyleList:[],
     userID:null,
     respError: false,
-    imgLicense:[],//Added in new version license for img
+    imgLicense:[],
 
     initializer: function () {
         window.postMessage({event: 'attoEditorOpened',data:""},'*');
-        // Add buttons and tie methods to them.
+
         var that = this;
 
         that.citationStyles = this.get('defaultCitStyle');
@@ -50,16 +50,16 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
         that.userID = this.get("userId");
         that.respError = this.get("respError");
         that.imgLicense = this.get("imgLicense");
-        
+
         var citOpts = [];
-        for(var i = 0;i<citStyleList.length;i++){
+        for(var i = 0; i < citStyleList.length; i++){
             var opt = {
-                    text:citStyleList[i].label,
-                    callback:function(e,args){
-                        that.saveSelectedCitation(args);
-                    },
+                text:citStyleList[i].label,
+                callback:function(e, args){
+                    that.saveSelectedCitation(args);
+                },
                 callbackArgs:citStyleList[i].val
-                };
+            };
             citOpts.push(opt);
         }
         citOpts.push({
@@ -98,7 +98,7 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
 
     },
     insertCitationToEditor:function(s) {
-        var host=this.get('host');
+        var host = this.get('host');
         host.focus();
         host.insertContentAtFocusPoint(s + '<br/>');
     },
@@ -113,7 +113,7 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             method: 'POST',
             on:{
                 success:function(r,arg){
-                    var imagetag="<img src='"+decodeURI(arg.response)+"'/>";
+                    var imagetag = "<img src='" + decodeURI(arg.response) + "'/>";
                     that.insertCitationToEditor(imagetag);
                 }
             }
@@ -126,7 +126,7 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
         if(!sel.length) {
             return false;
         } else {
-            for(var i = 0;i < sel.length;i++){
+            for(var i = 0; i < sel.length; i++){
                 var link = sel[i],
                 insLink = '<a href ="' + link.uri + '" target="_blank">' + link.title + '</a> ';
                 this.insertCitationToEditor(insLink);
@@ -138,8 +138,8 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
         if(!sel.length){
             return false;
         } else {
-         for(var i = 0; i<sel.length;i++) {
-             var img = window.document.createElement('img'),
+            for(var i = 0; i < sel.length; i++) {
+                var img = window.document.createElement('img'),
                 image = sel[i];
                 img.src = image.previewImage;
                 if(img.src !== image.previewImage){
@@ -163,10 +163,10 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             window.postMessage({event:'eexcess.log.itemCitedAsHyperlink',data:that.selectedRec[0]},'*');
             return false;
         }
-        require(['local_eexcess/citationBuilder'],function(CitationProcessor){
+        require(['block_eexcess/citationBuilder'],function(CitationProcessor){
             var citjson = that.parseRecToCitation(that.selectedRec);
             var cit = null;
-            that.lastUsedCitationStyle=style;
+            that.lastUsedCitationStyle = style;
             cit = new CitationProcessor(citjson,undefined,style);
             window.postMessage({event:'eexcess.log.itemCitedAsText',data:that.selectedRec[0]},'*');
             that.insertCitationToEditor(cit);
@@ -174,26 +174,26 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
     },
     parseRecToCitation: function(recomendations) {
         var citationJSONList = {};
-        for(var i = 0;i<recomendations.length;i++) {
+        for(var i = 0; i < recomendations.length; i++) {
             var r = recomendations[i],
-                id = typeof r.id === 'undefined' ? "":r.id,
-                collectionName = typeof r.collectionName === 'undefined' ? "":r.collectionName,
-                uri = typeof r.uri === 'undefined'?"":r.uri,
-                title = typeof r.title ==='undefined'?"":r.title,
-                creator = typeof r.creator ==='undefined'?"":r.creator,
-                year = typeof r.facets.year ==='undefined'?"":r.facets.year;
-                
+                id = typeof r.id === 'undefined' ? "" : r.id,
+                collectionName = typeof r.collectionName === 'undefined' ? "" : r.collectionName,
+                uri = typeof r.uri === 'undefined' ? "" : r.uri,
+                title = typeof r.title === 'undefined' ? "" : r.title,
+                creator = typeof r.creator === 'undefined' ? "" : r.creator,
+                year = typeof r.facets.year === 'undefined' ? "" : r.facets.year;
+
             var citObj = {
-                    "id":id,
-                    "container-title":collectionName,
-                    "URL":uri,
-                    "title":title,
-                    "author":[{"family":creator}],
-                    "issued":{"date-parts":[[year]]}
-                };
-           citationJSONList[citObj.id] = citObj;
+                "id":id,
+                "container-title":collectionName,
+                "URL":uri,
+                "title":title,
+                "author":[{"family":creator}],
+                "issued":{"date-parts":[[year]]}
+            };
+            citationJSONList[citObj.id] = citObj;
         }
-           
+
         return citationJSONList;
     },
     getText: function() {
@@ -201,9 +201,9 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             nodes = this.getNodesUntilCursor(host.editor.getDOMNode()),
             text = null;
 
-        for(var i = (nodes.childNodes.length - 1);i>-1;i--){
+        for(var i = (nodes.childNodes.length - 1); i > -1; i--){
             var node = nodes.childNodes[i];
-            if(node.textContent.length>0){
+            if(node.textContent.length > 0){
                 text = node.textContent;
                 i = -1;
             }
@@ -228,34 +228,51 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             return preCaretTextRange.cloneContents();
         }
     },
-    checkImageLicense: function(selectedRec) {
-        var that = this;
+    checkImageLicense: function(license) {
+
         var checkLicense = false;
-            for( var i = 0; i < this.imgLicense.length; i++){
-                if(this.imgLicense[i] === selectedRec[0].facets.license){
-                    checkLicense = true;
-                }
+        for(var i = 0; i < this.imgLicense.length; i++){
+            if(this.imgLicense[i] === license[0].facets.license){
+                checkLicense = true;
             }
-            if(checkLicense !== false){
-                this.insertImage();
-            }else{
-                if(confirm(M.util.get_string("add_license", "atto_eexcesseditor") + "\n\n" + selectedRec[0].facets.license)){
-                    var url = M.cfg.wwwroot + '/lib/editor/atto/plugins/eexcesseditor/savelicense.php';
-                    var license =  selectedRec[0].facets.license;
-                    Y.io(url,{
-            data: {
-                license:license
-            },
-            method: 'POST',
-            on:{
-                success:function(){
-                    that.insertImage();
-                }
-            }
+        }
+        if(checkLicense !== false){
+            this.insertImage();
+        } else {
+            this.addDialogue(license);
+        }
+
+    },
+    addDialogue:function(license){
+        var that = this;
+        var dialogue = this.getDialogue({
+            headerContent : M.util.get_string("add_license", "atto_eexcesseditor"),
+            width: '600px'
         });
+        var imgLic = '<div class = "img-license-dialogue-text"><a href = "' + license[0].facets.license + '" target="blank">' + license[0].facets.license + '</a></div>';
+        var buttonSave = '<button id = "img-license-button-save">Save</button>';
+        var buttonClose = '<button id = "img-license-button-close">Close</button>';
+        var buttons = '<div class = "img-license-dialogue-buttons">' + buttonSave + buttonClose + '</div>';
+        var content = '<div class = "img-license-dialogue" >' + imgLic + buttons + '</div>';
+        dialogue.set('bodyContent', content).show();
+        document.getElementById('img-license-button-save').onclick = function() {
+            var url = M.cfg.wwwroot + '/lib/editor/atto/plugins/eexcesseditor/savelicense.php';
+            Y.io(url,{
+                data: {
+                    license:license[0].facets.license
+                },
+                method: 'POST',
+                on:{
+                    success:function(){
+                        that.insertImage();
+                    }
                 }
-            }
-            
+            });
+            dialogue.hide();
+        };
+        document.getElementById('img-license-button-close').onclick = function() {
+            dialogue.hide();
+        };
     },
     saveSelectedCitation:function(styleId) {
         var url = M.cfg.wwwroot + '/lib/editor/atto/plugins/eexcesseditor/savecit.php';

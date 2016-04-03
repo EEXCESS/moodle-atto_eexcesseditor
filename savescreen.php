@@ -21,30 +21,30 @@
  * @copyright  bit media e-solutions GmbH <gerhard.doppler@bitmedia.cc>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
+
 define('AJAX_SCRIPT', true);
 require_once(dirname(__FILE__) . '/../../../../../config.php');
-$screens_folder = $CFG->dirroot."/lib/editor/atto/plugins/eexcesseditor/pix/screenshots/";
-$img_url = $CFG->wwwroot."/lib/editor/atto/plugins/eexcesseditor/pix/screenshots/";
+$screensfolder = $CFG->dirroot."/lib/editor/atto/plugins/eexcesseditor/pix/screenshots/";
+$imgurl = $CFG->wwwroot."/lib/editor/atto/plugins/eexcesseditor/pix/screenshots/";
 $guid = uniqid();
 $filename = $guid."_file.png";
-$tmppath = $screens_folder.$filename;
+$tmppath = $screensfolder.$filename;
 $data = optional_param("imgdata", false, PARAM_TEXT);
 $fdata = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data));
 file_put_contents($tmppath, $fdata);
 $context = context_system::instance();
 $fs = get_file_storage();
-$file_record = array(
-    'contextid'=>$context->id,
-    'component'=>'block_eexcess',
-    'filearea'=>'screenshot',
-    'itemid'=>0,
-    'filepath'=>'/',
-    'filename'=>$filename,
-    'timecreated'=>time(),
-    'timemodified'=>time());
+$filerecord = array(
+    'contextid' => $context->id,
+    'component' => 'block_eexcess',
+    'filearea' => 'screenshot',
+    'itemid' => 0,
+    'filepath' => '/',
+    'filename' => $filename,
+    'timecreated' => time(),
+    'timemodified' => time());
 
-$file = $fs->create_file_from_pathname($file_record, $tmppath);
+$file = $fs->create_file_from_pathname($filerecord, $tmppath);
 unlink($tmppath);
 $fullpath = "{$CFG->wwwroot}/pluginfile.php/{$file->get_contextid()}/block_eexcess/screenshot/{$file->get_itemid()}/{$file->get_filename()}";
 echo $fullpath;

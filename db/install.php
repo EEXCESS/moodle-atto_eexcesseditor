@@ -29,7 +29,7 @@ function xmldb_atto_eexcesseditor_install() {
     $toolbar = get_config('editor_atto', 'toolbar');
     if (strpos($toolbar, 'eexcesseditor') === false) {
         $groups = explode("\n", $toolbar);
-        // Try to put wiris in other group
+        // Try to put wiris in other group.
         $found = false;
         foreach ($groups as $i => $group) {
             $parts = explode('=', $group);
@@ -38,12 +38,12 @@ function xmldb_atto_eexcesseditor_install() {
                 $found = true;
             }
         }
-        // Otherwise create a math group in the second position starting from 
+        // Otherwise create a math group in the second position starting from
         // the end.
         if (!$found) {
             do {
                 $last = array_pop($groups);
-            } while(empty($last) && !empty($groups));
+            } while (empty($last) && !empty($groups));
             $groups[] = 'other = eexcesseditor';
             $groups[] = $last;
         }

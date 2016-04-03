@@ -25,4 +25,4 @@
 $string['pluginname'] = 'EEXCESS Editor';
 $string['citationstyle'] = 'Select Citation Style';
 $string['noaccess'] = 'You not have permissions in excess plugin';
-$string['add_license'] ='You want to add this license to your profile EEXCESS ?';
+$string['add_license'] = 'You want to add this license to your profile EEXCESS ?';
