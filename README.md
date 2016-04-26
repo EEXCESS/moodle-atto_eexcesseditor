@@ -25,8 +25,18 @@ Necessary steps:
 6. Change the settings if it is necessary and click the button Save changes.
 7. Installing EEXCESS plugin finished.
 
-After the installation, an EEXCESS button ![button_eexcess](https://raw.githubusercontent.com/EEXCESS/MoodleAttoEditorPlugin/master/docs/button_eexcess.png) (for displaying the recommendations) will appear on the top in the center. 
-User settings for changing the preferred citation style will be added to the navigation block.
+
+After the installation, add block EEXCESS on page 
+
+![block-eexcess](https://raw.githubusercontent.com/EEXCESS/MoodleServerPlugin/master/docs/block-eexcess.png).
+
+
+After the click on button show/hide Search-bar
+
+![block-eexcess](https://raw.githubusercontent.com/EEXCESS/MoodleServerPlugin/master/docs/block-eexcess-button.png)
+
+EEXCESS Search-Bar ![searchBar](https://raw.githubusercontent.com/EEXCESS/MoodleServerPlugin/master/docs/searchBar.png)  will appear on the bottom. 
+
 
 ### Moodle Atto Editor plugin
 You also need to install the excess atto editor plugin, for inserting citations in atto text editor.
@@ -40,47 +50,74 @@ Necessary steps:
 5. Click continue.
 6. Installing EEXCESS plugin finished.
 
-After installation, 2 buttons EEXCESS (button![display_res](https://raw.githubusercontent.com/EEXCESS/MoodleAttoEditorPlugin/master/docs/atto_toolbar_menu_open_rec.png)for displaying the recommendations, button![cit_style](https://raw.githubusercontent.com/EEXCESS/MoodleAttoEditorPlugin/master/docs/atto_toolbar_menu_select_cit_style.png)for change and insert citation) will appear in toolbar atto.
+After installation, button![cit_style](https://raw.githubusercontent.com/EEXCESS/MoodleServerPlugin/master/docs/atto_toolbar_menu_select_cit_style.png)for change and insert citation) will appear in toolbar atto.
 
-![atto_toolbar_menu](https://raw.githubusercontent.com/EEXCESS/MoodleAttoEditorPlugin/master/docs/atto_toolbar_menu.png)
+![atto_toolbar_menu](https://raw.githubusercontent.com/EEXCESS/MoodleServerPlugin/master/docs/button-change-cit-style.png)
 
 ## Usage instruction
 ### Content consumption
-For search: you can select any text on any page in the Moodle site (except inside a text editor). The EEXESS button gets animated while the system is looking for recommendations. As soon as recommendations are found the animation stops and the number of recommendations is displayed.![button_eexcess_with_results](https://raw.githubusercontent.com/EEXCESS/MoodleAttoEditorPlugin/master/docs/button_eexcess_with_results.png) Clicking the button opens the recommendation display.
+For search: you can select any text on any page in the Moodle site (except inside a text editor). The EEXESS image ![eexcess_image](https://raw.githubusercontent.com/EEXCESS/MoodleServerPlugin/master/docs/eexcess-image1.png) gets animated while the system is looking for recommendations. As soon as recommendations are found the animation stops and button with results will appear on search bar ![button_eexcess_with_results](https://raw.githubusercontent.com/EEXCESS/MoodleServerPlugin/master/docs/searchBar-results.png) Clicking the button opens the recommendation display.
 ### Content creation
-When you are writing a text (e.g. a forum post) the system gets active as soon as you finish a paragraph (by pressiong Return). The EEXCESS button gets animated while the system is looking for recommendations. As soon as recommendations are found the animation stops and the number of recommendations is displayed.
-Clicking the EEXCESS button in the Atto Editor toolbar or the EEXCESS button on the top of the page opens the recommendation display. 
+When you are writing a text (e.g. a forum post) the system gets active as soon as you finish a paragraph (by pressiong Return). The EEXCESS image gets animated while the system is looking for recommendations. As soon as recommendations are found the animation stops and button with results will appear on search bar.
+Clicking the button with results of the page opens the recommendation display. 
 Now the recommendation display contains 3 elements to enrich your text in the editor:
 
-![dashboard_screenshot](https://raw.githubusercontent.com/EEXCESS/MoodleAttoEditorPlugin/master/docs/dashboard_screen.png)
+#### Search Results
+![!search_result_screenshot](https://raw.githubusercontent.com/EEXCESS/MoodleServerPlugin/master/docs/searchBar-results-enrich-text1.png)
+
+These elements serve to:
+
+* Embed an image
+
+ ![results_insert_image](https://raw.githubusercontent.com/EEXCESS/MoodleServerPlugin/master/docs/searchBar-results-insert-image.png)
+* Embed a citation (according to the selected preferred citation style)
+
+ ![results_insert_citation](https://raw.githubusercontent.com/EEXCESS/MoodleServerPlugin/master/docs/searchBar-results-insert-citation.png)
+#### Dashboard
+![dashboard_screenshot](https://raw.githubusercontent.com/EEXCESS/MoodleServerPlugin/master/docs/searchBar-dashboard-enrich-text.png)
 
 These elements serve to:
 
 * Embed an image 
  
-  ![button_embed_image](https://raw.githubusercontent.com/EEXCESS/MoodleAttoEditorPlugin/master/docs/embed_image.png)
-* Embed a citation (according to the selected preferred citation style) (image Embed a citation)
+  ![dashboard_embed_image](https://raw.githubusercontent.com/EEXCESS/MoodleServerPlugin/master/docs/searchBar-dashboard-insert-image.png)
+* Embed a citation (according to the selected preferred citation style)
 
-  ![button_embed_citation](https://raw.githubusercontent.com/EEXCESS/MoodleAttoEditorPlugin/master/docs/embed_citation.png)
+  ![dashboard_embed_citation](https://raw.githubusercontent.com/EEXCESS/MoodleServerPlugin/master/docs/searchBar-dashboard-insert-citation.png)
 * Embed a screenshot of the visualization (not available for all visualization types)
  
-  ![button_screenshot](https://raw.githubusercontent.com/EEXCESS/MoodleAttoEditorPlugin/master/docs/screenshot.png)
+  ![dashboard_screenshot](https://raw.githubusercontent.com/EEXCESS/MoodleServerPlugin/master/docs/searchBar-dashboard-enrich-text-insert-screenshot.png)
+#### Facet Scape
+![facet_scape_screen](https://raw.githubusercontent.com/EEXCESS/MoodleServerPlugin/master/docs/searchBar-facet-scape-enrich-text.png)
+
+These elements serve to:
+
+* Embed an image
+ 
+ ![facet_scape_insert_image](https://raw.githubusercontent.com/EEXCESS/MoodleServerPlugin/master/docs/searchBar-facet-scape-insert-image.png)
+* Embed a citation (according to the selected preferred citation style)
+ 
+ ![facet_scape_insert_citation](https://raw.githubusercontent.com/EEXCESS/MoodleServerPlugin/master/docs/searchBar-facet-scape-insert-citation.png)
 
 ## Settings
 ### Administrator settings:
-Go to Site administration/Plugins/Local plugins/EEXCESS settings has 2 options:
+Go to Site administration/Plugins/Blocks/EEXCESS has 3 options:
 
 * Change EEXCESS citation.
 * Change base url for recommendations.
+* Add image license.
 
-![admin_settings](https://raw.githubusercontent.com/EEXCESS/MoodleAttoEditorPlugin/master/docs/EEXCESS_admin_settings.png)
+![block-eexcess-admin-settings](https://raw.githubusercontent.com/EEXCESS/MoodleServerPlugin/master/docs/block-eexcess-admin-settings.png)
 
 ### User settings:
-In navigation block go to EEXCESS settings/Interests to add interests tags.
+In EEXCESS block go to Interests to add interests tags.
 
-![interests](https://raw.githubusercontent.com/EEXCESS/MoodleAttoEditorPlugin/master/docs/EEXCESS_user_interests_settings.png)
+![block-eexcess-interests](https://raw.githubusercontent.com/EEXCESS/MoodleServerPlugin/master/docs/block-eexcess-user-interests.png)
 
-In navigation block go to EEXCESS settings/Citation settings to change the citation style.
+In EEXCESS block go to Citation to change the citation style.
 
-![citation](https://raw.githubusercontent.com/EEXCESS/MoodleAttoEditorPlugin/master/docs/EEXCESS_user_settings.png)
+![block-eexcess-citation](https://raw.githubusercontent.com/EEXCESS/MoodleServerPlugin/master/docs/block-eexcess-user-citation.png)
 
+In EEXCESS block go to Image License to add Image License.
+
+![block-eexcess-img-license](https://raw.githubusercontent.com/EEXCESS/MoodleServerPlugin/master/docs/block-eexcess-user-img-license.png)
