@@ -130,9 +130,9 @@ function atto_eexcesseditor_pluginfile($course, $cm, $context, $filearea, $args,
     // Extract the filename / filepath from the $args array.
     $filename = array_pop($args); // The last item in the $args array.
     if (!$args) {
-        $filepath = '/'; // $args is empty => the path is '/'.
+        $filepath = '/'; // The $args is empty => the path is '/'.
     } else {
-        $filepath = '/'.implode('/', $args).'/'; // $args contains elements of the filepath.
+        $filepath = '/'.implode('/', $args).'/'; // The $args contains elements of the filepath.
     }
 
     // Retrieve the file from the Files API.

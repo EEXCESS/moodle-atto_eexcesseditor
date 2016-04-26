@@ -46,5 +46,6 @@ $filerecord = array(
 
 $file = $fs->create_file_from_pathname($filerecord, $tmppath);
 unlink($tmppath);
-$fullpath = "{$CFG->wwwroot}/pluginfile.php/{$file->get_contextid()}/block_eexcess/screenshot/{$file->get_itemid()}/{$file->get_filename()}";
+$getcontext = $file->get_contextid();
+$fullpath = "{$CFG->wwwroot}/pluginfile.php/{$getcontext}/block_eexcess/screenshot/{$file->get_itemid()}/{$file->get_filename()}";
 echo $fullpath;
