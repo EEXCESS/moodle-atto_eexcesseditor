@@ -27,3 +27,4 @@ $plugin->component = 'atto_eexcesseditor';
 $plugin->version   = 2016042600;
 $plugin->requires = 2015051100;
 $plugin->maturity = MATURITY_STABLE;
+$plugin->release = '1.0';
