@@ -24,28 +24,30 @@
 
 define('AJAX_SCRIPT', true);
 require_once(dirname(__FILE__) . '/../../../../../config.php');
-$screensfolder = $CFG->dirroot."/lib/editor/atto/plugins/eexcesseditor/pix/screenshots/";
-$imgurl = $CFG->wwwroot."/lib/editor/atto/plugins/eexcesseditor/pix/screenshots/";
-$guid = uniqid();
-$filename = $guid."_file.png";
-$tmppath = $screensfolder.$filename;
-$data = optional_param("imgdata", false, PARAM_TEXT);
-$fdata = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data));
-file_put_contents($tmppath, $fdata);
-$context = context_system::instance();
-$fs = get_file_storage();
-$filerecord = array(
-    'contextid' => $context->id,
-    'component' => 'block_eexcess',
-    'filearea' => 'screenshot',
-    'itemid' => 0,
-    'filepath' => '/',
-    'filename' => $filename,
-    'timecreated' => time(),
-    'timemodified' => time());
+$systemcontext = context_system::instance();
+if (isloggedin() && has_capability('block/eexcess:myaddinstance', $systemcontext)) {
+    $screensfolder = $CFG->dirroot."/lib/editor/atto/plugins/eexcesseditor/pix/screenshots/";
+    $imgurl = $CFG->wwwroot."/lib/editor/atto/plugins/eexcesseditor/pix/screenshots/";
+    $guid = uniqid();
+    $filename = $guid."_file.png";
+    $tmppath = $screensfolder.$filename;
+    $data = optional_param("imgdata", false, PARAM_TEXT);
+    $fdata = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data));
+    file_put_contents($tmppath, $fdata);
+    $fs = get_file_storage();
+    $filerecord = array(
+        'contextid' => $systemcontext->id,
+        'component' => 'block_eexcess',
+        'filearea' => 'screenshot',
+        'itemid' => 0,
+        'filepath' => '/',
+        'filename' => $filename,
+        'timecreated' => time(),
+        'timemodified' => time());
 
-$file = $fs->create_file_from_pathname($filerecord, $tmppath);
-unlink($tmppath);
-$getcontext = $file->get_contextid();
-$fullpath = "{$CFG->wwwroot}/pluginfile.php/{$getcontext}/block_eexcess/screenshot/{$file->get_itemid()}/{$file->get_filename()}";
-echo $fullpath;
+    $file = $fs->create_file_from_pathname($filerecord, $tmppath);
+    unlink($tmppath);
+    $getcontext = $file->get_contextid();
+    $fullpath = "{$CFG->wwwroot}/pluginfile.php/{$getcontext}/block_eexcess/screenshot/{$file->get_itemid()}/{$file->get_filename()}";
+    echo $fullpath;
+}

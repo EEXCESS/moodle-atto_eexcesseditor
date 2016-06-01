@@ -251,7 +251,8 @@ Y.namespace('M.atto_eexcesseditor').Button = Y.Base.create('button', Y.M.editor_
             headerContent : M.util.get_string("add_license", "atto_eexcesseditor"),
             width: '600px'
         });
-        var imgLic = '<div class = "img-license-dialogue-text"><a href = "' + license[0].facets.license + '" target="blank">' + license[0].facets.license + '</a></div>';
+        var imgLic = '<div class = "img-license-dialogue-text"><a href = "' + license[0].facets.license
+                     + '" target="blank">' + license[0].facets.license + '</a></div>';
         var buttonSave = '<button id = "img-license-button-save">Save</button>';
         var buttonClose = '<button id = "img-license-button-close">Close</button>';
         var buttons = '<div class = "img-license-dialogue-buttons">' + buttonSave + buttonClose + '</div>';

@@ -112,6 +112,17 @@ function atto_eexcesseditor_params_for_js() {
         return array("defaultCitStyle" => $styleid, "citStyles" => $citstyles, "userId" => $userid, "respError" => $resperror);
     }
 }
+/**
+ * Adds screenshot.
+ *
+ * @param object $course Course object.
+ * @param object $cm Course module object.
+ * @param object $context Context.
+ * @param string $filearea File area, icon or description.
+ * @param array $args Array of arguments passed.
+ * @param boolean $forcedownload True if download should be fored.
+ * @param array $options Array of options.
+ */
 function atto_eexcesseditor_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
     // Check the contextlevel is as expected - if your plugin is a block, this becomes CONTEXT_BLOCK, etc.
     if ($context->contextlevel != CONTEXT_MODULE) {
